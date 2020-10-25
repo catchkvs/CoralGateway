@@ -8,8 +8,8 @@ import (
 	"github.com/cockroachdb/pebble"
 )
 var db *pebble.DB
-func InitPebbleDB() {
-	database, err := pebble.Open("demo", &pebble.Options{})
+func InitPebbleDB(dbDir string) {
+	database, err := pebble.Open(dbDir, &pebble.Options{})
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -20,9 +20,10 @@ func InitPebbleDB() {
 /**
  *
  */
-func putObject(key string, value interface{}) {
+func PutObject(collectionName, dataKey string, dataValue interface{}) {
+	key := collectionName + "/" + dataKey
 	keyBytes := []byte(key)
-	data, e := json.Marshal(value)
+	data, e := json.Marshal(dataValue)
 	if e!= nil {
 		log.Fatal(e)
 	}
@@ -31,7 +32,7 @@ func putObject(key string, value interface{}) {
 	}
 }
 
-func getObject(key string) interface{} {
+func GetObject(key string) interface{} {
 	keyBytes := []byte(key)
 	value, closer, err := db.Get(keyBytes)
 	if err != nil {
@@ -46,4 +47,5 @@ func getObject(key string) interface{} {
 	if err := db.Close(); err != nil {
 		log.Fatal(err)
 	}
+	return nil
 }

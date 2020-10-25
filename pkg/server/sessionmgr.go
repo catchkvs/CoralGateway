@@ -36,6 +36,10 @@ func IsSessionExist(sessionId string) bool {
 	return false
 }
 
+func IsValidAuthToken(token string) bool {
+	return true
+}
+
 func GetSessionStore() *SessionStore {
 	return store
 }

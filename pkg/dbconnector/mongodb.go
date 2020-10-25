@@ -1,15 +1,11 @@
 package dbconnector
+
 import (
-	"context"
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
-	"time"
 )
 
 func Init() {
-	client, err := mongo.NewClient(options.Client().ApplyURI("mongodb://localhost:27017"))
+	/*client, err := mongo.NewClient(options.Client().ApplyURI("mongodb://localhost:27017"))
 	handleError(err)
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
@@ -28,7 +24,7 @@ func Init() {
 	}
 	if err := cur.Err(); err != nil {
 		log.Fatal(err)
-	}
+	}*/
 }
 
 func handleError(err error) {

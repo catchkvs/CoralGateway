@@ -1,7 +1,9 @@
 package handler
 
 import (
+	"coralgateway/pkg/dbconnector"
 	"coralgateway/pkg/server"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"github.com/gorilla/websocket"
@@ -10,6 +12,10 @@ import (
 	"sync"
 )
 
+const(
+	CMD_SYNC_DATA = "SyncData"
+
+)
 var upgrader = websocket.Upgrader{}
 var mux sync.Mutex
 
@@ -54,5 +60,17 @@ func HandleRequest(w http.ResponseWriter, r *http.Request) {
 }
 
 func processMessage( msg []byte) {
+	syncDataMsg := server.SyncDataMsg{}
+	json.Unmarshal(msg, &syncDataMsg)
+	log.Println("Processing message: " , syncDataMsg)
+	if server.IsSessionExist(syncDataMsg.SessionId) {
+		if server.IsValidAuthToken(syncDataMsg.AuthToken) {
+			HandleSyncData(syncDataMsg)
+		}
+	}
+}
 
+func HandleSyncData(syncDataMsg server.SyncDataMsg) {
+	decodedData, _ := base64.StdEncoding.DecodeString(syncDataMsg.DataValue)
+	dbconnector.PutObject(syncDataMsg.CollectionName, syncDataMsg.DataKey, decodedData)
 }
